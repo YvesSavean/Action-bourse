@@ -1,6 +1,5 @@
 
-CREATE USER actionProfil
-CREATE SCHEMA IF NOT EXISTS actions AUTHORIZATION actionProfil;
+CREATE SCHEMA IF NOT EXISTS actions;
 
 CREATE TABLE IF NOT EXISTS actions.data (
 	id int primary key not null,
@@ -22,7 +21,7 @@ CREATE TABLE IF NOT EXISTS actions.information (
 	ResultatBrutExploitation VARCHAR(100),
 	CoutDuRisque VARCHAR(100),
 	ResultatExploitation VARCHAR(100),
-	QuotePartResultatsDesSociétesMisesEnEquivalence VARCHAR(100),
+	QuotePartResultatsDesSocietesMisesEnEquivalence VARCHAR(100),
 	ResultatCourantAvantImpot VARCHAR(100),
 	ResultatNet VARCHAR(100),
 	ResultatNetPartDuGroupe VARCHAR(100),
@@ -30,8 +29,8 @@ CREATE TABLE IF NOT EXISTS actions.information (
 	ActifsFinALaJusteValeurParResultat VARCHAR(100),
 	InstrumentsDerivesDeCouverture VARCHAR(100),
 	ActifsFinanciersDispoALaVente VARCHAR(100),
-	ActifsFinDétenusALecheance VARCHAR(100),
-	PretsEtAvancesSurLesEtsDeCrédit VARCHAR(100),
+	ActifsFinDetenusALecheance VARCHAR(100),
+	PretsEtAvancesSurLesEtsDeCredit VARCHAR(100),
 	TotalCreancesClientele VARCHAR(100),
 	Immobilisations VARCHAR(100),
 	AutresActifs VARCHAR(100),
@@ -49,15 +48,15 @@ CREATE TABLE IF NOT EXISTS actions.information (
 	ResultatNetPartDuGroupeParAction VARCHAR(100),
 	ResultatNetPartDuGroupeDilueParAction VARCHAR(100),
 	CoefficientExploitation VARCHAR(100),
-	RatioInternationalDeSolvabilité VARCHAR(100),
+	RatioInternationalDeSolvabilite VARCHAR(100),
 	RentabiliteDesFondsPropres VARCHAR(100),
 	EffectifEnFinAnnee VARCHAR(100),
 	EffectifMoyen VARCHAR(100),
-	idSociete int not null
+	idSociete VARCHAR(100) not null
 );
 
 CREATE TABLE IF NOT EXISTS actions.societe (
-	id int primary key not null,
+	id VARCHAR(100) primary key not null,
  	idElement VARCHAR(100),
 	secteurActivite VARCHAR(100),
 	codeIsin VARCHAR(100),
@@ -72,10 +71,10 @@ CREATE TABLE IF NOT EXISTS actions.societe (
 CREATE TABLE IF NOT EXISTS actions.rendement (
 	id int primary key not null,
  	annee VARCHAR(100),
-	montant VARCHAR(100),
-	Cours VARCHAR(100),
-	rendement VARCHAR(100),
-	idSociete int not null
+	montant NUMERIC,
+	cours NUMERIC,
+	rendement NUMERIC,
+	idSociete VARCHAR(100) not null
 );
 
 create sequence actions.data_id;

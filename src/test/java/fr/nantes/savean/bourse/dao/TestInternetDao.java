@@ -21,7 +21,7 @@ public class TestInternetDao {
 	@Test
 	public void getInfoFile() throws IOException, URISyntaxException{
 		InternetDao internetDao = new InternetDao();
-		Societe societe = internetDao.getSociete("ACA");
+		Societe societe = internetDao.getSociete("AB");
 		Assert.assertEquals(5, societe.getInformationAnnuel().size());
 	}
 }

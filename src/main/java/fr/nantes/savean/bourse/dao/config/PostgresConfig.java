@@ -10,21 +10,18 @@ public class PostgresConfig {
 
 	Connection connection = null;
 
-	public Connection getConnection() throws SQLException,
-			ClassNotFoundException, IOException {
+	public Connection getConnection() throws SQLException, ClassNotFoundException, IOException {
 		Class.forName("org.postgresql.Driver");
 
 		Properties propertieConfig = new Properties();
-		propertieConfig.load(PostgresConfig.class
-				.getResourceAsStream("PostgreSQLConnect.properties"));
-		String hostname = propertieConfig.getProperty("hostname");
-		String port = propertieConfig.getProperty("port");
-		String dbname = propertieConfig.getProperty("dbname");
-		String username = propertieConfig.getProperty("username");
-		String password = propertieConfig.getProperty("password");
-		connection = DriverManager.getConnection("jdbc:postgresql://"
-				+ hostname + ":" + port + "/" + dbname + "," + username + ", "
-				+ password);
+		propertieConfig.load(PostgresConfig.class.getClassLoader().getResourceAsStream("PostgreSQLConnect.properties"));
+		String hostname = propertieConfig.getProperty("hostname").trim();
+		String port = propertieConfig.getProperty("port").trim();
+		String dbname = propertieConfig.getProperty("dbname").trim();
+		String username = propertieConfig.getProperty("username").trim();
+		String password = propertieConfig.getProperty("password").trim();
+		connection = DriverManager.getConnection("jdbc:postgresql://" + hostname + ":" + port + "/" + dbname, username,
+				password);
 		return connection;
 	}
 
