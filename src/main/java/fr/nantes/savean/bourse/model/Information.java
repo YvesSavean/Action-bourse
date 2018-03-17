@@ -4,46 +4,45 @@ import java.util.List;
 
 public class Information {
 
-	String annee;
-	String ProduitNetBancaire;
-	String ChargesGeneralesExploitation;
-	String ResultatBrutExploitation;
-	String CoutDuRisque;
-	String ResultatExploitation;
-	String QuotePartResultatsDesSociétesMisesEnEquivalence;
-	String ResultatCourantAvantImpot;
-	String ResultatNet;
-	String ResultatNetPartDuGroupe;
-	String CaisseBanquesCentralesCcp;
-	String ActifsFinALaJusteValeurParResultat;
-	String InstrumentsDerivesDeCouverture;
-	String ActifsFinanciersDispoALaVente;
-	String ActifsFinDétenusALecheance;
-	String PretsEtAvancesSurLesEtsDeCrédit;
-	String TotalCreancesClientele;
-	String Immobilisations;
-	String AutresActifs;
-	String TotalActif;
-	String BanquesCentralesCCP;
-	String PassifsFinALaJusteValPaResultat;
-	String DettesEnversLesEtsDeCredit;
-	String DettesAupresDeLaClientele;
-	String DettesRepresenteesParUnTitre;
-	String DettesSubordonnees;
-	String ProvisionsTechniquesDesContratsAss;
-	String CapitauxPropres;
-	String AutresPassifs;
-	String TotalPassif;
-	String ResultatNetPartDuGroupeParAction;
-	String ResultatNetPartDuGroupeDilueParAction;
-	String CoefficientExploitation;
-	String RatioInternationalDeSolvabilité;
-	String RentabiliteDesFondsPropres;
-	String EffectifEnFinAnnee;
-	String EffectifMoyen;
-	List<Data> datas;
-	Integer rendement;
-
+	private String annee;
+	private String ProduitNetBancaire;
+	private String ChargesGeneralesExploitation;
+	private String ResultatBrutExploitation;
+	private String CoutDuRisque;
+	private String ResultatExploitation;
+	private String QuotePartResultatsDesSociétesMisesEnEquivalence;
+	private String ResultatCourantAvantImpot;
+	private String ResultatNet;
+	private String ResultatNetPartDuGroupe;
+	private String CaisseBanquesCentralesCcp;
+	private String ActifsFinALaJusteValeurParResultat;
+	private String InstrumentsDerivesDeCouverture;
+	private String ActifsFinanciersDispoALaVente;
+	private String ActifsFinDétenusALecheance;
+	private String PretsEtAvancesSurLesEtsDeCrédit;
+	private String TotalCreancesClientele;
+	private String Immobilisations;
+	private String AutresActifs;
+	private String TotalActif;
+	private String BanquesCentralesCCP;
+	private String PassifsFinALaJusteValPaResultat;
+	private String DettesEnversLesEtsDeCredit;
+	private String DettesAupresDeLaClientele;
+	private String DettesRepresenteesParUnTitre;
+	private String DettesSubordonnees;
+	private String ProvisionsTechniquesDesContratsAss;
+	private String CapitauxPropres;
+	private String AutresPassifs;
+	private String TotalPassif;
+	private String ResultatNetPartDuGroupeParAction;
+	private String ResultatNetPartDuGroupeDilueParAction;
+	private String CoefficientExploitation;
+	private String RatioInternationalDeSolvabilité;
+	private String RentabiliteDesFondsPropres;
+	private String EffectifEnFinAnnee;
+	private String EffectifMoyen;
+	private List<Data> datas;
+	
 	public String getAnnee() {
 		return annee;
 	}
@@ -340,19 +339,6 @@ public class Information {
 	public void setEffectifMoyen(String effectifMoyen) {
 		EffectifMoyen = effectifMoyen;
 	}
-
-	public Integer getRendement() {
-		return rendement;
-	}
-
-	public void setRendement(Integer rendement) {
-		if (this.rendement == null) {
-			this.rendement = rendement;
-		} else {
-			this.rendement += rendement;
-		}
-	}
-
 	public List<Data> getDatas() {
 		return datas;
 	}

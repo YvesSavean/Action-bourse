@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,13 +19,17 @@ import org.jsoup.select.Elements;
 
 import fr.nantes.savean.bourse.model.Data;
 import fr.nantes.savean.bourse.model.Information;
+import fr.nantes.savean.bourse.model.Rendement;
 import fr.nantes.savean.bourse.model.Societe;
 import fr.nantes.savean.bourse.utils.HttpUtils;
 import fr.nantes.savean.bourse.utils.XmlUtils;
 
 public class InternetDao {
+	private static final String[] LETTRE_ALPHABET = new String[] {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",};
 	private static final String URL = "http://www.boursorama.com/";
+	private static final String URL_TRADING = "https://www.tradingsat.com/";
 	private static final Pattern PATTERN_INFO_VARS = Pattern.compile("tc_vars[ ]+=[ ]+(\\{.*})");
+	private static final Pattern PATTERN_INFO_ID = Pattern.compile("/cours.phtml\\?symbole=1rP(.*)");
 
 	public Societe getSociete(String id) throws MalformedURLException, IOException, URISyntaxException {
 		Societe societe = new Societe();
@@ -163,17 +168,39 @@ public class InternetDao {
 			information.setRentabiliteDesFondsPropres(ligneBodyRatioFinancier.get(4).getAllElements().get(i).text());
 			information.setEffectifEnFinAnnee(ligneBodyRatioFinancier.get(5).getAllElements().get(i).text());
 			information.setEffectifMoyen(ligneBodyRatioFinancier.get(6).getAllElements().get(i).text());
-			information.setRendement(getRendement(societe));
 			/* fin information ratioFinancier */
 			informations.add(information);
 		}
 		remplirSocieteInformation(societe, html);
+		getRendement(societe);
 	}
 
-	private Integer getRendement(Societe societe) {
-		// TODO Stub de la méthode généré automatiquement
-		return null;
+	private void getRendement(Societe societe) throws IOException {
+		String html = HttpUtils.getHTML(URL_TRADING + societe.getNom().toLowerCase(Locale.FRANCE).replaceAll(" ", "-")+"-"+societe.getCode()+"/dividende.html");
+		String xpath = "//table";
+		List<Element> elements = XmlUtils.getInfoString(html, xpath);
+		Element rendementAnnuel = elements.get(1);
+		System.out.println(rendementAnnuel);
+		Elements ligneBodyRendementAnnuel = rendementAnnuel.getElementsByTag("tbody").get(0).getElementsByTag("tr");
+		for (Element elementLigneBodyRendementAnnuel :ligneBodyRendementAnnuel) {
+			Elements elementsTrRendementAnnuel = elementLigneBodyRendementAnnuel.getElementsByTag("td");
+			Rendement rendement = new Rendement();
+			rendement.setAnnee(elementsTrRendementAnnuel.get(0).text());
+			rendement.setMontant(getWithoutExtension(elementsTrRendementAnnuel.get(1).text()));
+			rendement.setCours(getWithoutExtension(elementsTrRendementAnnuel.get(2).text()));
+			rendement.setRendement(getRendement(elementsTrRendementAnnuel.get(3).text()));
+			societe.getRendements().add(rendement);
+		}	
 	}
+
+	private Double getWithoutExtension(String valeur) {
+		return Double.parseDouble(valeur.substring(0, valeur.length() - 1));
+	}
+	
+	private Double getRendement(String valeur) {
+		return Double.parseDouble(valeur.substring(0, 4));
+	}
+
 
 	private String getAnnee(String annee) {
 		String anneeSur2Caractere = annee.split("\\.")[1];
@@ -184,6 +211,27 @@ public class InternetDao {
 			caractereAnneepredit--;
 		}
 		return String.valueOf(caractereAnneepredit) + anneeSur2Caractere;
+	}
+
+	public List<String> getIdPea() throws IOException {
+		List<String> idSocietes = new ArrayList<String>();
+		String xpath = "//table";
+		for(String lettre :LETTRE_ALPHABET) {
+			String html = HttpUtils.getHTML(URL + "bourse/actions/cours_az.phtml?pea=1&LETTRE=" + lettre);
+			List<Element> elements = XmlUtils.getInfoString(html, xpath);
+			Element tablePrincipal = elements.get(0);
+			Elements ligneBodyBilan = tablePrincipal.getElementsByTag("tbody").get(0).getElementsByTag("tr");
+			for(Element trElement :ligneBodyBilan) {
+				String hrefTr = trElement.attr("href");
+				Matcher matcher = PATTERN_INFO_ID.matcher(hrefTr);
+				if(matcher.find()) {
+					idSocietes.add(matcher.group(1));
+					System.out.println(matcher.group(1));
+				}
+			}
+		}
+			
+		return idSocietes;
 	};
 
 }

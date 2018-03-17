@@ -1,5 +1,6 @@
 package fr.nantes.savean.bourse.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Societe {
@@ -15,6 +16,7 @@ public class Societe {
 	private String code;
 	private String isin;
 	private String nom;
+	private List<Rendement> rendements;
 
 	public List<Information> getInformationAnnuel() {
 		return informationAnnuel;
@@ -105,6 +107,17 @@ public class Societe {
 
 	public void setIsin(String isin) {
 		this.isin = isin;
+	}
+
+	public List<Rendement> getRendements() {
+		if (rendements == null) {
+			rendements = new ArrayList<Rendement>();
+		}
+		return rendements;
+	}
+
+	public void setRendements(List<Rendement> rendements) {
+		this.rendements = rendements;
 	}
 
 }
