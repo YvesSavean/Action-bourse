@@ -5,11 +5,14 @@ import java.util.List;
 public class Information {
 
 	private String annee;
-	private Double beneficeTotal;
-	private Double nombredeTitreEnCirulation;
-	private Double croissanceFutureEnPourcentage;
-	private Double capitauxPropre;
-	private Double resultatNet;
+	private String resultatNetParGroupe;
+	private String croissanceFutureEnPourcentage;
+	private String resultatNet;
+	private String chiffreAffaire;
+	private String totalActif;
+	private String totalPassif;
+	private String capitauxpropre;
+
 	private List<Data> datas;
 
 	public String getAnnee() {
@@ -20,20 +23,20 @@ public class Information {
 		this.annee = annee;
 	}
 
-	public Double getBeneficeTotal() {
-		return beneficeTotal;
+	public String getCroissanceFutureEnPourcentage() {
+		return croissanceFutureEnPourcentage;
 	}
 
-	public void setBeneficeTotal(Double beneficeTotal) {
-		this.beneficeTotal = beneficeTotal;
+	public void setCroissanceFutureEnPourcentage(String croissanceFutureEnPourcentage) {
+		this.croissanceFutureEnPourcentage = croissanceFutureEnPourcentage;
 	}
 
-	public Double getNombredeTitreEnCirulation() {
-		return nombredeTitreEnCirulation;
+	public String getResultatNet() {
+		return resultatNet;
 	}
 
-	public void setNombredeTitreEnCirulation(Double nombredeTitreEnCirulation) {
-		this.nombredeTitreEnCirulation = nombredeTitreEnCirulation;
+	public void setResultatNet(String resultatNet) {
+		this.resultatNet = resultatNet;
 	}
 
 	public List<Data> getDatas() {
@@ -44,30 +47,44 @@ public class Information {
 		this.datas = datas;
 	}
 
-	public Double getCroissanceFutureEnPourcentage() {
-		return croissanceFutureEnPourcentage;
+	public String getChiffreAffaire() {
+		return chiffreAffaire;
 	}
 
-	public void setCroissanceFutureEnPourcentage(Double croissanceFutureEnPourcentage) {
-		this.croissanceFutureEnPourcentage = croissanceFutureEnPourcentage;
+	public void setChiffreAffaire(String chiffreAffaire) {
+		this.chiffreAffaire = chiffreAffaire;
 	}
 
-	
-
-	public Double getCapitauxPropre() {
-		return capitauxPropre;
+	public String getTotalActif() {
+		return totalActif;
 	}
 
-	public void setCapitauxPropre(Double capitauxPropre) {
-		this.capitauxPropre = capitauxPropre;
+	public void setTotalActif(String totalActif) {
+		this.totalActif = totalActif;
 	}
 
-	public Double getResultatNet() {
-		return resultatNet;
+	public String getTotalPassif() {
+		return totalPassif;
 	}
 
-	public void setResultatNet(Double resultatNet) {
-		this.resultatNet = resultatNet;
+	public void setTotalPassif(String totalPassif) {
+		this.totalPassif = totalPassif;
+	}
+
+	public String getCapitauxpropre() {
+		return capitauxpropre;
+	}
+
+	public void setCapitauxpropre(String capitauxpropre) {
+		this.capitauxpropre = capitauxpropre;
+	}
+
+	public String getResultatNetParGroupe() {
+		return resultatNetParGroupe;
+	}
+
+	public void setResultatNetParGroupe(String resultatNetParGroupe) {
+		this.resultatNetParGroupe = resultatNetParGroupe;
 	}
 
 }

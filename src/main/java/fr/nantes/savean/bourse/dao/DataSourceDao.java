@@ -100,60 +100,22 @@ public class DataSourceDao {
 	private long creationInformation(Information information, String id) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		String generatedColumns[] = { "id" };
-		String insertTableRendement = "INSERT INTO actions.information" + "(annee, " + "ProduitNetBancaire, "
-				+ "ChargesGeneralesExploitation," + "ResultatBrutExploitation," + "CoutDuRisque,"
-				+ "ResultatExploitation," + "quotepartresultatsdessocietesmisesenequivalence, "
-				+ "ResultatCourantAvantImpot, " + "ResultatNet," + "ResultatNetPartDuGroupe"
-				+ ",CaisseBanquesCentralesCcp," + "ActifsFinALaJusteValeurParResultat,"
-				+ "InstrumentsDerivesDeCouverture" + ",ActifsFinanciersDispoALaVente," + "ActifsFinDetenusALecheance,"
-				+ "PretsEtAvancesSurLesEtsDeCredit," + "TotalCreancesClientele" + ",Immobilisations," + "AutresActifs,"
-				+ "TotalActif," + "BanquesCentralesCCP," + "PassifsFinALaJusteValPaResultat,"
-				+ "DettesEnversLesEtsDeCredit" + ",DettesAupresDeLaClientele," + "DettesRepresenteesParUnTitre,"
-				+ "DettesSubordonnees," + "ProvisionsTechniquesDesContratsAss," + "CapitauxPropres" + ",AutresPassifs,"
-				+ "TotalPassif," + "ResultatNetPartDuGroupeParAction," + "ResultatNetPartDuGroupeDilueParAction,"
-				+ "CoefficientExploitation" + ",RatioInternationalDeSolvabilite," + "RentabiliteDesFondsPropres,"
-				+ "EffectifEnFinAnnee," + "EffectifMoyen," + "idSociete) VALUES"
-				+ "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insertTableRendement = "INSERT INTO actions.information (annee, resultatNetParGroupe, "
+				+ "croissanceFutureEnPourcentage, resultatNet, chiffreAffaire,"
+				+ "totalActif,totalPassif,capitauxPropre,idSociete) VALUES"
+				+ "(?,?,?,?,?,?,?,?,?)";
+		
 		try {
 			preparedStatement = connection.prepareStatement(insertTableRendement, generatedColumns);
 			preparedStatement.setString(1, information.getAnnee());
-			preparedStatement.setString(2, information.getProduitNetBancaire());
-			preparedStatement.setString(3, information.getChargesGeneralesExploitation());
-			preparedStatement.setString(4, information.getResultatBrutExploitation());
-			preparedStatement.setString(5, information.getCoutDuRisque());
-			preparedStatement.setString(6, information.getResultatExploitation());
-			preparedStatement.setString(7, information.getQuotePartResultatsDesSocietesMisesEnEquivalence());
-			preparedStatement.setString(8, information.getResultatCourantAvantImpot());
-			preparedStatement.setString(9, information.getResultatNet());
-			preparedStatement.setString(10, information.getResultatNetPartDuGroupe());
-			preparedStatement.setString(11, information.getCaisseBanquesCentralesCcp());
-			preparedStatement.setString(12, information.getActifsFinALaJusteValeurParResultat());
-			preparedStatement.setString(13, information.getInstrumentsDerivesDeCouverture());
-			preparedStatement.setString(14, information.getActifsFinanciersDispoALaVente());
-			preparedStatement.setString(15, information.getActifsFinDetenusALecheance());
-			preparedStatement.setString(16, information.getPretsEtAvancesSurLesEtsDeCredit());
-			preparedStatement.setString(17, information.getTotalCreancesClientele());
-			preparedStatement.setString(18, information.getImmobilisations());
-			preparedStatement.setString(19, information.getAutresActifs());
-			preparedStatement.setString(20, information.getTotalActif());
-			preparedStatement.setString(21, information.getBanquesCentralesCCP());
-			preparedStatement.setString(22, information.getPassifsFinALaJusteValPaResultat());
-			preparedStatement.setString(23, information.getDettesEnversLesEtsDeCredit());
-			preparedStatement.setString(24, information.getDettesAupresDeLaClientele());
-			preparedStatement.setString(25, information.getDettesRepresenteesParUnTitre());
-			preparedStatement.setString(26, information.getDettesSubordonnees());
-			preparedStatement.setString(27, information.getProvisionsTechniquesDesContratsAss());
-			preparedStatement.setString(28, information.getCapitauxPropres());
-			preparedStatement.setString(29, information.getAutresPassifs());
-			preparedStatement.setString(30, information.getTotalPassif());
-			preparedStatement.setString(31, information.getResultatNetPartDuGroupeParAction());
-			preparedStatement.setString(32, information.getResultatNetPartDuGroupeDilueParAction());
-			preparedStatement.setString(33, information.getCoefficientExploitation());
-			preparedStatement.setString(34, information.getRatioInternationalDeSolvabilite());
-			preparedStatement.setString(35, information.getRentabiliteDesFondsPropres());
-			preparedStatement.setString(36, information.getEffectifEnFinAnnee());
-			preparedStatement.setString(37, information.getEffectifMoyen());
-			preparedStatement.setString(38, id);
+			preparedStatement.setString(2, information.getResultatNetParGroupe());
+			preparedStatement.setString(3, information.getCroissanceFutureEnPourcentage());
+			preparedStatement.setString(4, information.getResultatNet());
+			preparedStatement.setString(5, information.getChiffreAffaire());
+			preparedStatement.setString(6, information.getTotalActif());
+			preparedStatement.setString(7, information.getTotalPassif());
+			preparedStatement.setString(8, information.getCapitauxpropre());
+			preparedStatement.setString(9, id);
 			// execute insert SQL stetement
 			preparedStatement.executeUpdate();
 

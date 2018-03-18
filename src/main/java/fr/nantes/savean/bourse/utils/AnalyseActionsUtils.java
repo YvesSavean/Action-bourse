@@ -1,16 +1,17 @@
 package fr.nantes.savean.bourse.utils;
 
 import fr.nantes.savean.bourse.model.Information;
+import fr.nantes.savean.bourse.model.Societe;
 
 public class AnalyseActionsUtils {
-	
-	/**
-	 * Calcul du BPA
-	 */
-	public static Double calculBeneficeParAction(Information information) {
-		return information.getBeneficeTotal()/information.getNombredeTitreEnCirulation();
-		
-	}
+//	
+//	/**
+//	 * Calcul du BPA
+//	 */
+//	public static Double calculBeneficeParAction(Information information) {
+//		return information.getBeneficeTotal()/information.getNombredeTitreEnCirulation();
+//		
+//	}
 	
 	/**
 	 * Calcul du PER
@@ -67,5 +68,15 @@ public class AnalyseActionsUtils {
 		return resultatNet/capitauxPropre;
 		
 	}
+	
+	public static boolean getEtape1(Societe societe) {
+		
+		
+		return false;
+		//si financière 	capitaux propre/total des actifs > 20%
+		//ROE >15%
+		//taux de distribution < 60%
+	}
+
 
 }

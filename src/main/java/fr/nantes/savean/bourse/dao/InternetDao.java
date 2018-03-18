@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.nodes.Element;
@@ -32,7 +34,7 @@ public class InternetDao {
 	private static final Pattern PATTERN_INFO_VARS = Pattern.compile("tc_vars[ ]+=[ ]+(\\{.*})");
 	private static final Pattern PATTERN_INFO_ID = Pattern.compile("/cours.phtml\\?symbole=1rP(.*)");
 
-	public Societe getSociete(String id)  {
+	public Societe getSociete(String id) {
 		Societe societe = new Societe();
 		societe.setId(id);
 		try {
@@ -78,25 +80,25 @@ public class InternetDao {
 		while (setIterator.hasNext()) {
 			JSONArray arrayInfo = (JSONArray) setIterator.next();
 			Data data = new Data();
-			if(!arrayInfo.isNull(0)) {
+			if (!arrayInfo.isNull(0)) {
 				data.setDate(arrayInfo.getString(0));
 			}
-			if(!arrayInfo.isNull(1)) {
+			if (!arrayInfo.isNull(1)) {
 				data.setOpen(arrayInfo.getDouble(1));
 			}
-			if(!arrayInfo.isNull(2)) {
+			if (!arrayInfo.isNull(2)) {
 				data.setHigh(arrayInfo.getDouble(2));
 			}
-			if(!arrayInfo.isNull(3)) {
+			if (!arrayInfo.isNull(3)) {
 				data.setLow(arrayInfo.getDouble(3));
 			}
-			if(!arrayInfo.isNull(4)) {
+			if (!arrayInfo.isNull(4)) {
 				data.setLast(arrayInfo.getDouble(4));
 			}
-			if(!arrayInfo.isNull(5)) {
+			if (!arrayInfo.isNull(5)) {
 				data.setVolume(arrayInfo.getDouble(5));
 			}
-			if(!arrayInfo.isNull(6)) {
+			if (!arrayInfo.isNull(6)) {
 				data.setTurnover(arrayInfo.getDouble(6));
 			}
 			String annee = data.getDate().split("-")[0];
@@ -121,77 +123,75 @@ public class InternetDao {
 
 	private void getInfosAnnuel(Societe societe) throws IOException, URISyntaxException {
 		List<Element> elements;
-		System.out.println(societe.getId());
 		String html = HttpUtils.getHTML(URL + "bourse/profil/profil_finance.phtml?symbole=1rP" + societe.getId());
 		String xpath = "//table";
 		elements = XmlUtils.getInfoString(html, xpath);
 
 		Element compteDeResultat = elements.get(0);
 		Element bilan = elements.get(1);
-		Element ratioFinancier = elements.get(2);
 		Element annees = compteDeResultat.getElementsByTag("thead").get(0).getElementsByTag("tr").get(0);
 		Elements ligneBodyComposteDeResultat = compteDeResultat.getElementsByTag("tbody").get(0).getElementsByTag("tr");
 		Elements ligneBodyBilan = bilan.getElementsByTag("tbody").get(0).getElementsByTag("tr");
-		Elements ligneBodyRatioFinancier = ratioFinancier.getElementsByTag("tbody").get(0).getElementsByTag("tr");
 		List<Information> informations = new ArrayList<Information>();
 		societe.setInformationAnnuel(informations);
+		int idResultatNet = getIdSpecifique(ligneBodyComposteDeResultat, "Résultat net");
+		int idResultatNetParGroupe = getIdSpecifique(ligneBodyComposteDeResultat, "Résultat net (part du groupe)");
+		int idChiffreAffaire = getIdSpecifique(ligneBodyComposteDeResultat, "Chiffre d'affaires");
+		int idTotalActif = getIdSpecifique(ligneBodyBilan, "Total actif");
+		int idTotalpassif = getIdSpecifique(ligneBodyBilan, "Total passif");
+		int idCapitauxpropres = getIdSpecifique(ligneBodyBilan, "Capitaux propres");
+
 		for (int i = 2; i < annees.getAllElements().size(); i++) {
 			Information information = new Information();
 			information.setAnnee(getAnnee(annees.getAllElements().get(i).text()));
-
 			// /* information Compte de resultat */
-			// information.setProduitNetBancaire(ligneBodyComposteDeResultat.get(0).getAllElements().get(i).text());
-			// information
-			// .setChargesGeneralesExploitation(ligneBodyComposteDeResultat.get(1).getAllElements().get(i).text());
-			// information.setResultatBrutExploitation(ligneBodyComposteDeResultat.get(2).getAllElements().get(i).text());
-			// information.setCoutDuRisque(ligneBodyComposteDeResultat.get(3).getAllElements().get(i).text());
-			// information.setResultatExploitation(ligneBodyComposteDeResultat.get(4).getAllElements().get(i).text());
-			// information.setQuotePartResultatsDesSocietesMisesEnEquivalence(
-			// ligneBodyComposteDeResultat.get(5).getAllElements().get(i).text());
-			// information.setResultatCourantAvantImpot(ligneBodyComposteDeResultat.get(6).getAllElements().get(i).text());
-			// information.setResultatNet(ligneBodyComposteDeResultat.get(7).getAllElements().get(i).text());
-			// information.setResultatNetPartDuGroupe(ligneBodyComposteDeResultat.get(8).getAllElements().get(i).text());
+			if (idResultatNet != -1) {
+				information
+						.setResultatNet(ligneBodyComposteDeResultat.get(idResultatNet).getAllElements().get(i).text());
+			}
+			if (idResultatNetParGroupe != -1) {
+				information
+						.setResultatNetParGroupe(ligneBodyComposteDeResultat.get(idResultatNetParGroupe).getAllElements().get(i).text());
+			}
+			if (idChiffreAffaire != -1) {
+				information.setChiffreAffaire(
+						ligneBodyComposteDeResultat.get(idChiffreAffaire).getAllElements().get(i).text());
+			}
 			// /* fin information Compte de resultat */
 			// /* information bilan */
-			// information.setCaisseBanquesCentralesCcp(ligneBodyBilan.get(0).getAllElements().get(i).text());
-			// information.setActifsFinALaJusteValeurParResultat(ligneBodyBilan.get(1).getAllElements().get(i).text());
-			// information.setInstrumentsDerivesDeCouverture(ligneBodyBilan.get(2).getAllElements().get(i).text());
-			// information.setActifsFinanciersDispoALaVente(ligneBodyBilan.get(3).getAllElements().get(i).text());
-			// information.setActifsFinDetenusALecheance(ligneBodyBilan.get(4).getAllElements().get(i).text());
-			// information.setPretsEtAvancesSurLesEtsDeCredit(ligneBodyBilan.get(5).getAllElements().get(i).text());
-			// information.setTotalCreancesClientele(ligneBodyBilan.get(6).getAllElements().get(i).text());
-			// information.setImmobilisations(ligneBodyBilan.get(7).getAllElements().get(i).text());
-			// information.setAutresActifs(ligneBodyBilan.get(8).getAllElements().get(i).text());
-			// information.setTotalActif(ligneBodyBilan.get(9).getAllElements().get(i).text());
-			// information.setBanquesCentralesCCP(ligneBodyBilan.get(10).getAllElements().get(i).text());
-			// information.setPassifsFinALaJusteValPaResultat(ligneBodyBilan.get(11).getAllElements().get(i).text());
-			// information.setInstrumentsDerivesDeCouverture(ligneBodyBilan.get(12).getAllElements().get(i).text());
-			// information.setDettesEnversLesEtsDeCredit(ligneBodyBilan.get(13).getAllElements().get(i).text());
-			// information.setDettesAupresDeLaClientele(ligneBodyBilan.get(14).getAllElements().get(i).text());
-			// information.setDettesRepresenteesParUnTitre(ligneBodyBilan.get(15).getAllElements().get(i).text());
-			// information.setDettesSubordonnees(ligneBodyBilan.get(16).getAllElements().get(i).text());
-			// information.setProvisionsTechniquesDesContratsAss(ligneBodyBilan.get(17).getAllElements().get(i).text());
-			// information.setCapitauxPropres(ligneBodyBilan.get(18).getAllElements().get(i).text());
-			// information.setAutresPassifs(ligneBodyBilan.get(19).getAllElements().get(i).text());
-			// information.setTotalPassif(ligneBodyBilan.get(20).getAllElements().get(i).text());
+			if (idTotalActif != -1) {
+				information.setTotalActif(ligneBodyBilan.get(idTotalActif).getAllElements().get(i).text());
+			}
+			if (idTotalpassif != -1) {
+				information.setTotalPassif(ligneBodyBilan.get(idTotalpassif).getAllElements().get(i).text());
+			}
+			if (idCapitauxpropres != -1) {
+				information.setCapitauxpropre(ligneBodyBilan.get(idCapitauxpropres).getAllElements().get(i).text());
+			}
 			/* fin information bilan */
-
-			/* information ratioFinancier */
-//			information
-//					.setResultatNetPartDuGroupeParAction(ligneBodyRatioFinancier.get(0).getAllElements().get(i).text());
-//			information.setResultatNetPartDuGroupeDilueParAction(
-//					ligneBodyRatioFinancier.get(1).getAllElements().get(i).text());
-//			information.setCoefficientExploitation(ligneBodyRatioFinancier.get(2).getAllElements().get(i).text());
-//			information
-//					.setRatioInternationalDeSolvabilite(ligneBodyRatioFinancier.get(3).getAllElements().get(i).text());
-//			information.setRentabiliteDesFondsPropres(ligneBodyRatioFinancier.get(4).getAllElements().get(i).text());
-//			information.setEffectifEnFinAnnee(ligneBodyRatioFinancier.get(5).getAllElements().get(i).text());
-//			information.setEffectifMoyen(ligneBodyRatioFinancier.get(6).getAllElements().get(i).text());
-			/* fin information ratioFinancier */
 			informations.add(information);
 		}
 		remplirSocieteInformation(societe, html);
 		getRendement(societe);
+	}
+
+	private int getIdSpecifique(Elements ligneBody, String value) {
+		double rapprochement = 0;
+		int idLePlusproche = 0;
+		for (int i = 0; i < ligneBody.size(); i++) {
+			String id = ligneBody.get(i).getAllElements().get(1).text();
+			JaroWinklerDistance jaroWinklerDistance = new JaroWinklerDistance();
+			double rapprochementId = jaroWinklerDistance.apply(id.toLowerCase(Locale.FRANCE).trim(),
+					value.toLowerCase(Locale.FRANCE).trim());
+			if (rapprochement < rapprochementId) {
+				rapprochement = rapprochementId;
+				idLePlusproche = i;
+			}
+		}
+		if (rapprochement < 0.9) {
+			idLePlusproche = -1;
+		}
+		return idLePlusproche;
 	}
 
 	private void getRendement(Societe societe) throws IOException {
@@ -217,13 +217,13 @@ public class InternetDao {
 
 	private Double getWithoutExtension(String valeur) {
 		Double retour;
-		if(valeur.isEmpty()) {
+		if (valeur.isEmpty()) {
 			retour = 0.0;
-		}else {
-			valeur = valeur.substring(0, valeur.length() - 1);
-			if(valeur.isEmpty()) {
+		} else {
+			valeur = valeur.replaceAll("[^0-9.]", "");
+			if (valeur.isEmpty()) {
 				retour = 0.0;
-			}else {
+			} else {
 				retour = Double.parseDouble(valeur);
 			}
 		}
@@ -232,13 +232,13 @@ public class InternetDao {
 
 	private Double getRendement(String valeur) {
 		Double retour;
-		if(valeur.isEmpty()) {
+		if (valeur.isEmpty()) {
 			retour = 0.0;
-		}else {
-			valeur = valeur.substring(0, 4);
-			if(valeur.isEmpty()) {
+		} else {
+			valeur = valeur.replaceAll("[^0-9.]", "").substring(0, 4);
+			if (valeur.isEmpty()) {
 				retour = 0.0;
-			}else {
+			} else {
 				retour = Double.parseDouble(valeur);
 			}
 		}

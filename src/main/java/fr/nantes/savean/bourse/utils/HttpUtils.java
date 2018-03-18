@@ -19,7 +19,7 @@ public class HttpUtils {
 	}
 
 	private static String toString(InputStream inputStream) throws IOException {
-		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "ISO-8859-1");
 		BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 		String inputLine;
 		StringBuilder stringBuilder = new StringBuilder();
